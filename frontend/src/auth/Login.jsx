@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Github, Mail } from "lucide-react";
+import { Label } from "@/components/ui/label";
 
 export default function CreateAccount() {
   return (
@@ -46,9 +47,9 @@ export default function CreateAccount() {
             </span>
           </div>
 
-        <div className="space-y-2 text-left">
+          <div className="space-y-2 text-left">
             <label htmlFor="email" className="text-sm font-medium ">
-               Full Name
+              Full Name
             </label>
             <Input
               id="name"
@@ -78,6 +79,11 @@ export default function CreateAccount() {
               type="password"
               className="bg-neutral-800 border-neutral-700 text-white placeholder-neutral-500"
             />
+          </div>
+
+          <div className="flex items-center gap-2">
+            <Label>Profile:</Label>
+            <input accept="image/*" type="file" className="cursor-pointer border-b-white" />
           </div>
 
           <Button className="w-full bg-neutral-200 text-black hover:bg-neutral-300">
