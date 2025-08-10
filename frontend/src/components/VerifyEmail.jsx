@@ -13,7 +13,7 @@ const VerifyEmail = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const email = useSelector((state) => state.auth.signupEmail);
-  const { loding ,user } = useSelector((store) => store.auth);
+  const { loding, user } = useSelector((store) => store.auth);
   const handleVerify = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -39,7 +39,7 @@ const VerifyEmail = () => {
       setLoading(false);
     }
   };
-   
+
   return (
     <div className="flex items-center justify-center h-screen bg-gray-50">
       <form
