@@ -1,10 +1,21 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import './index.css'
-import App from './App.jsx'
-
-createRoot(document.getElementById('root')).render(
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import "./index.css";
+import App from "./App.jsx";
+import { Toaster } from "./components/ui/sonner";
+import { store } from "./Redux/store";
+import { Provider } from "react-redux";
+import { persistStore } from "redux-persist";
+import { PersistGate } from "redux-persist/lib/integration/react";
+const persistor = persistStore(store);
+createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <App />
-  </StrictMode>,
-)
+    <Provider store={store}>
+      <PersistGate loding={null} persistor={persistor}>
+        <App />
+        <Toaster />
+      </PersistGate>
+    </Provider>
+    
+  </StrictMode>
+);

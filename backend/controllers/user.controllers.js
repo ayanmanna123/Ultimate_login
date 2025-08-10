@@ -8,11 +8,11 @@ import crypto from "crypto";
 // #1 Create user
 export const register = async (req, res) => {
   try {
-    const { fullname, email, phonenumber, password, role } = req.body;
-
-    if (!fullname || !email || !password || !phonenumber || !role) {
+    const { fullname , email , password } = req.body;
+    console.log(fullname);
+    if (!fullname  || !email  || !password ) {
       return res.status(400).json({
-        message: "All fields are required.",
+        message: "All fields are required A user already",
         success: false,
       });
     }
@@ -21,13 +21,7 @@ export const register = async (req, res) => {
     const fileUri = getDataUri(file);
     const cloudResponse = await cloudinary.uploader.upload(fileUri.content);
 
-    const existingPhone = await User.findOne({ phonenumber });
-    if (existingPhone) {
-      return res.status(400).json({
-        message: "This phone number is already registered.",
-        success: false,
-      });
-    }
+    
 
     const existingUser = await User.findOne({ email });
     if (existingUser) {
@@ -42,13 +36,10 @@ export const register = async (req, res) => {
     await User.create({
       fullname,
       email,
-      phonenumber,
+
       password: hashedPassword,
       verificationCode,
-      role,
-      profile: {
-        profilephoto: cloudResponse.secure_url,
-      },
+      profilephoto: cloudResponse.secure_url,
     });
     await sendEmail(
       email,
@@ -86,7 +77,6 @@ export const login = async (req, res) => {
         message: "User not found with this email.",
         success: false,
       });
-    
     }
 
     // ✅ Check if user is verified
@@ -135,8 +125,7 @@ export const login = async (req, res) => {
           _id: user._id,
           fullname: user.fullname,
           email: user.email,
-          phonenumber: user.phonenumber,
-          role: user.role,
+
           profile: user.profile,
         },
       });
@@ -275,23 +264,20 @@ export const verifyEmail = async (req, res) => {
   });
 };
 
-export const getalluser = async(req ,res)=>{
+export const getalluser = async (req, res) => {
   try {
-    const alluser = await User.find()
-  if(!alluser){
-    return res.status(400).json({
-      success:false,
-      message:"user not find"
-    })
-  }
-  return res.status(200).json({
-    success:true,
-    alluser,
-    
-  })
-    
+    const alluser = await User.find();
+    if (!alluser) {
+      return res.status(400).json({
+        success: false,
+        message: "user not find",
+      });
+    }
+    return res.status(200).json({
+      success: true,
+      alluser,
+    });
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
-  
-}
+};

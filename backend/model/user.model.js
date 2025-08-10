@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const UserSchema = new mongoose.Schema(
   {
-    name: {
+    fullname: {
       type: String,
       required: true
     },
@@ -11,13 +11,25 @@ const UserSchema = new mongoose.Schema(
       required: true,
       unique: true
     },
-    image: {
-      type: String
-    }
+    password: {
+      type: String,
+      required: true
+    },
+    profilephoto: {
+      type: String,
+      default: ""
+    },
+     verificationCode: {
+      type: String,
+    },
+    isVerified: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );
 
-const UserModel = mongoose.model("social-login", UserSchema);
+const User = mongoose.model("User", UserSchema);
 
-export default UserModel;
+export default User;

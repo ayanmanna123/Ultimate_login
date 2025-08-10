@@ -4,6 +4,8 @@ import express from "express";
  
 import cors from "cors";
 import dotenv from "dotenv";
+import cookieParser from "cookie-parser";
+import router from "./routes/user.route.js";
 
 dotenv.config();
 connectToMongo();
@@ -22,9 +24,9 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 // ✅ Middlewares
-// app.use(express.json());
-// app.use(express.urlencoded({ extended: true }));
-// app.use(cookieParser());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 // ✅ Test Route
 app.get("/", (req, res) => {
@@ -34,7 +36,7 @@ app.get("/", (req, res) => {
 });
 
 // ✅ API Routes
- 
+ app.use("/api/v1/user", router);
 
 // ✅ Server Listener
 app.listen(port, () => {
