@@ -28,7 +28,7 @@ const VerifyEmail = () => {
 
       if (res.data.success) {
         toast.success(res.data.message);
-        navigate("/login"); // or wherever you want to send after verification
+        navigate("/"); // or wherever you want to send after verification
       } else {
         toast.error(res.data.message || "Verification failed.");
       }

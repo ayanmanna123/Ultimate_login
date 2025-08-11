@@ -16,7 +16,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { setLoding, setSignupEmail } from "@/Redux/authSilce";
 import { toast } from "sonner";
 import axios from "axios";
+import { useGoogleLogin } from "@react-oauth/google";
+import { googleauth } from "../api";
 export default function CreateAccount() {
+  
   const [input, setinput] = useState({
     fullname: "",
     email: "",
@@ -72,6 +75,33 @@ export default function CreateAccount() {
       dispatch(setLoding(false));
     }
   };
+    
+  const handleGoogleResponse = async (authResult) => {
+    
+    try {
+      if (authResult.code) {
+        const result = await googleauth(authResult.code);
+        const { email, name, image } = result.data.user; // Make sure 'image' matches your backend field
+        
+        const token = result.data.token;
+				const obj = {email,name, token, image};
+				localStorage.setItem('user-info',JSON.stringify(obj));
+				navigate('/');
+      }
+      else{
+        	console.log(authResult);
+				throw new Error(authResult);
+      }
+      console.log("Auth Result:", authResult);
+    } catch (error) {
+      console.error("Google login failed:", error);
+    }
+  };
+  const googleLogin = useGoogleLogin({
+    onSuccess: handleGoogleResponse,
+    onError: (error) => console.error("Google login error:", error),
+    flow: "auth-code",
+  });
 
   return (
     <div className="absolute inset-0 flex items-center justify-center min-h-screen bg-black text-white">
@@ -96,6 +126,7 @@ export default function CreateAccount() {
               </Button>
               <Button
                 variant="outline"
+                 onClick={googleLogin}
                 className="flex-1 bg-neutral-800 text-white border-neutral-700 hover:bg-neutral-700"
               >
                 <Mail className="mr-2 h-4 w-4" /> Google

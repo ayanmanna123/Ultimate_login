@@ -5,6 +5,9 @@ import getDataUri from "../utils/datauri.js";
 import cloudinary from "../utils/cloudinary.js";
 import sendEmail from "../utils/sendEmail.js";
 import crypto from "crypto";
+import axios from "axios";
+
+import { oauth2Client } from '../utils/googleconfig.js';
 // #1 Create user
 export const register = async (req, res) => {
   try {
@@ -280,4 +283,43 @@ export const getalluser = async (req, res) => {
   } catch (error) {
     console.log(error);
   }
+};
+
+export const googleAuth = async (req, res, next) => {
+    const code = req.query.code;
+    console.log(code)
+    try {
+        const googleRes = await oauth2Client.getToken(code);
+        oauth2Client.setCredentials(googleRes.tokens);
+        const userRes = await axios.get(
+            `https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${googleRes.tokens.access_token}`
+        );
+        const { email, name, picture } = userRes.data;
+        // console.log(userRes);
+        let user = await User.findOne({ email });
+
+        if (!user) {
+            user = await User.create({
+                fullname:name,
+                email,
+                profilephoto: picture,
+                isVerified:true
+            });
+        }
+        const { _id } = user;
+        const token = jwt.sign({ _id, email },
+            process.env.jwt_Secret, {
+            expiresIn: process.env.JWT_TIMEOUT,
+        });
+        res.status(200).json({
+            message: 'account creat successfully',
+            token,
+            user,
+        });
+    } catch (err) {
+      console.error("Google Auth Error:", err);
+        res.status(500).json({
+            message: "Internal Server Error"
+        })
+    }
 };

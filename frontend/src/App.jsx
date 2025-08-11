@@ -5,8 +5,15 @@ import CreateAccount from "./auth/Login";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Home from "./components/Home";
 import VerifyEmail from "./components/VerifyEmail";
-
+ import { GoogleOAuthProvider } from "@react-oauth/google";
 function App() {
+  const GoogleAuthWrapper =()=>{
+  return (
+    <GoogleOAuthProvider clientId="63882386085-a0qpr9is12bm1kjmfprsngcenbq09881.apps.googleusercontent.com">
+      <CreateAccount></CreateAccount>
+    </GoogleOAuthProvider>
+  )
+ }
   const approute = createBrowserRouter([
     {
       path: "/",
@@ -14,7 +21,7 @@ function App() {
     },
     {
       path: "/login",
-      element: <CreateAccount />,
+      element: <GoogleAuthWrapper />,
     },
     {
       path: "/user/varify",

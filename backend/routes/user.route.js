@@ -6,6 +6,7 @@ import {
   updateProfile,
   updateProfilePhoto,
   getalluser,
+  googleAuth,
 } from "../controllers/user.controllers.js";
 import isAuthenticated from "../middlewares/isAuthenticated.js";
 import { singleUplode } from "../middlewares/multer.js";
@@ -26,4 +27,7 @@ router
 router
   .route("/upload-profile-photo")
   .put(isAuthenticated, singleUplode, updateProfilePhoto);
+
+  router.route("/google").get(googleAuth)
+   
 export default router;
