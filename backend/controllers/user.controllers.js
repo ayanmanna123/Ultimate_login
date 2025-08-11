@@ -311,11 +311,20 @@ export const googleAuth = async (req, res, next) => {
             process.env.jwt_Secret, {
             expiresIn: process.env.JWT_TIMEOUT,
         });
-        res.status(200).json({
-            message: 'account creat successfully',
-            token,
-            user,
-        });
+       
+      return res
+      .status(200)
+      .cookie("token", token, {
+        maxAge: 24 * 60 * 60 * 1000,
+        httpOnly: true,
+        sameSite: "none", // REQUIRED for cross-site cookies
+        secure: true, // REQUIRED when sameSite is none
+      })
+      .json({
+        message: "Login successful.",
+        success: true,
+         user,
+      });
     } catch (err) {
       console.error("Google Auth Error:", err);
         res.status(500).json({

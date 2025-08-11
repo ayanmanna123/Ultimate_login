@@ -8,18 +8,17 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { Github, Mail } from "lucide-react";
+import { Github, Loader2, Mail } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { setLoding, setSignupEmail } from "@/Redux/authSilce";
+import { setLoding, setSignupEmail, setuser } from "@/Redux/authSilce";
 import { toast } from "sonner";
 import axios from "axios";
 import { useGoogleLogin } from "@react-oauth/google";
 import { googleauth } from "../api";
 export default function CreateAccount() {
-  
   const [input, setinput] = useState({
     fullname: "",
     email: "",
@@ -49,7 +48,6 @@ export default function CreateAccount() {
     if (input.file) {
       fromdata.append("file", input.file);
     }
-     
 
     try {
       dispatch(setLoding(true));
@@ -75,22 +73,21 @@ export default function CreateAccount() {
       dispatch(setLoding(false));
     }
   };
-    
+
   const handleGoogleResponse = async (authResult) => {
-    
     try {
       if (authResult.code) {
         const result = await googleauth(authResult.code);
         const { email, name, image } = result.data.user; // Make sure 'image' matches your backend field
-        
+
         const token = result.data.token;
-				const obj = {email,name, token, image};
-				localStorage.setItem('user-info',JSON.stringify(obj));
-				navigate('/');
-      }
-      else{
-        	console.log(authResult);
-				throw new Error(authResult);
+        const obj = { email, name, token, image };
+        localStorage.setItem("user-info", JSON.stringify(obj));
+        dispatch(setuser(result.data.user));
+        navigate("/");
+      } else {
+        console.log(authResult);
+        throw new Error(authResult);
       }
       console.log("Auth Result:", authResult);
     } catch (error) {
@@ -126,7 +123,7 @@ export default function CreateAccount() {
               </Button>
               <Button
                 variant="outline"
-                 onClick={googleLogin}
+                onClick={googleLogin}
                 className="flex-1 bg-neutral-800 text-white border-neutral-700 hover:bg-neutral-700"
               >
                 <Mail className="mr-2 h-4 w-4" /> Google
@@ -192,10 +189,16 @@ export default function CreateAccount() {
                 className="cursor-pointer border-b-white"
               />
             </div>
-
-            <Button className="w-full bg-neutral-200 text-black hover:bg-neutral-300">
-              Create account
-            </Button>
+            {loding ? (
+              <Button className="w-full bg-neutral-200 text-black hover:bg-neutral-300" >
+                {" "}
+                <Loader2 className={"w-full my-4 animate-spin"} />{" "}
+              </Button>
+            ) : (
+              <Button className="w-full bg-neutral-200 text-black hover:bg-neutral-300">
+                Create account
+              </Button>
+            )}
           </CardContent>
         </Card>
       </form>
