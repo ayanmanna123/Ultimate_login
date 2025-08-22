@@ -21,7 +21,7 @@ const Home = () => {
       });
 
       const res = await axios.put(
-        "http://localhost:5000/api/v1/user/update",
+        "https://ultimate-login.vercel.app/api/v1/user/update",
         { fullname: "New Full Name" },
         {
           headers: {
