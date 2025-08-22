@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const UserSchema = new mongoose.Schema(
   {
-    auth0Id: { type: String, required: true, unique: true }, // 👈 store Auth0 user_id
+    auth0Id: { type: String, required: true, unique: true },  
     fullname: { type: String },
     email: { type: String, required: true, unique: true },
     profilephoto: { type: String, default: "" },

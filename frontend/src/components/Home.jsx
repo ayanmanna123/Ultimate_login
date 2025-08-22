@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Button } from "./ui/button";
 import { useNavigate } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
@@ -7,6 +7,39 @@ import axios from "axios";
 const Home = () => {
   const { logout, loginWithRedirect, isAuthenticated, user, getAccessTokenSilently } = useAuth0();
   const navigate = useNavigate();
+
+ 
+  useEffect(() => {
+    const syncUser = async () => {
+      try {
+        const token = await getAccessTokenSilently({
+          audience: "http://localhost:5000/api/v1", // 👈 must match backend audience
+        });
+
+        const res = await axios.post(
+          "https://ultimate-login.vercel.app/api/v1/user/save", // 👈 your backend route
+          {
+            fullname: user?.name,
+            email: user?.email,
+            profilephoto: user?.picture,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        console.log("User synced:", res.data);
+      } catch (error) {
+        console.error("Sync user error:", error);
+      }
+    };
+
+    if (isAuthenticated && user) {
+      syncUser();
+    }
+  }, [isAuthenticated, user, getAccessTokenSilently]);
 
   const handleLogin = async () => {
     if (!isAuthenticated) {
@@ -17,7 +50,7 @@ const Home = () => {
   const updateProfile = async () => {
     try {
       const token = await getAccessTokenSilently({
-        audience: "http://localhost:5000/api/v1", // 👈 matches backend audience
+        audience: "http://localhost:5000/api/v1",
       });
 
       const res = await axios.put(
@@ -30,7 +63,7 @@ const Home = () => {
         }
       );
 
-      console.log(res.data);
+      console.log("Profile updated:", res.data);
     } catch (error) {
       console.error(error);
     }
