@@ -8,16 +8,19 @@ import { Provider } from "react-redux";
 import { persistStore } from "redux-persist";
 import { PersistGate } from "redux-persist/lib/integration/react";
 import { Auth0Provider } from "@auth0/auth0-react";
+
 const persistor = persistStore(store);
+
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <Provider store={store}>
-      <PersistGate loding={null} persistor={persistor}>
+      <PersistGate loading={null} persistor={persistor}>
         <Auth0Provider
           domain="dev-po1r5cykjnu8e0ld.us.auth0.com"
           clientId="2zeJqtiWNLa31OfIU9MZfQc4aMUfTY9y"
           authorizationParams={{
             redirect_uri: window.location.origin,
+            audience: "http://localhost:5000/api/v1", // 👈 use your API audience here
           }}
         >
           <App />

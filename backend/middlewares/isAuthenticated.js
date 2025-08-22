@@ -1,30 +1,15 @@
-import jwt from "jsonwebtoken";
- 
-const isAuthenticated = (req,res,next)=>{
-    try {
-        const token = req.cookies.token;
+import { expressjwt } from "express-jwt";
+import jwksRsa from "jwks-rsa";
 
-        if(!token){
-            return res.status(401).json({
-                message: "unauthorized user",
-                success: false
-            })
-        }
-        const decode= jwt.verify(token, process.env.jwt_Secret);
-        if(!decode){
-            res.status(401).json({
-                message: "invalid user",
-                success: false
-            })
-        }
-        req.id= decode.userId;
-        next();
-    } catch (error) {
-        return res.status(500).json({
-            message: "internal server error ",
-            success:false
+const isAuthenticated = expressjwt({
+  secret: jwksRsa.expressJwtSecret({
+    cache: true,
+    rateLimit: true,
+    jwksUri: `https://dev-po1r5cykjnu8e0ld.us.auth0.com/.well-known/jwks.json`,
+  }),
+  audience: "http://localhost:5000/api/v1", // 👈 matches Auth0 API identifier
+  issuer: `https://dev-po1r5cykjnu8e0ld.us.auth0.com/`,
+  algorithms: ["RS256"],
+});
 
-        })
-    }
-}
 export default isAuthenticated;
