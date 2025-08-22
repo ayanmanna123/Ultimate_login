@@ -1,46 +1,12 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Button } from "./ui/button";
 import { useNavigate } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 import axios from "axios";
 
 const Home = () => {
-  const {
-    logout,
-    loginWithRedirect,
-    isAuthenticated,
-    user,
-    getAccessTokenSilently,
-  } = useAuth0();
+  const { logout, loginWithRedirect, isAuthenticated, user, getAccessTokenSilently } = useAuth0();
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const syncUser = async () => {
-      try {
-        const token = await getAccessTokenSilently({
-          audience: "http://localhost:5000/api/v1",
-        });
-
-        const res = await axios.post(
-          "https://ultimate-login.vercel.app/api/v1/user/save",
-          {}, // empty body, backend will pull info from token
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-
-        console.log("User synced:", res.data);
-      } catch (error) {
-        console.error("Sync user error:", error);
-      }
-    };
-
-    if (isAuthenticated && user) {
-      syncUser();
-    }
-  }, [isAuthenticated, user, getAccessTokenSilently]);
 
   const handleLogin = async () => {
     if (!isAuthenticated) {
@@ -51,7 +17,7 @@ const Home = () => {
   const updateProfile = async () => {
     try {
       const token = await getAccessTokenSilently({
-        audience: "http://localhost:5000/api/v1",
+        audience: "http://localhost:5000/api/v1", // 👈 matches backend audience
       });
 
       const res = await axios.put(
@@ -64,7 +30,7 @@ const Home = () => {
         }
       );
 
-      console.log("Profile updated:", res.data);
+      console.log(res.data);
     } catch (error) {
       console.error(error);
     }
@@ -92,9 +58,7 @@ const Home = () => {
         <div className="flex justify-center items-center gap-2.5 p-3.5">
           {isAuthenticated ? (
             <Button
-              onClick={() =>
-                logout({ logoutParams: { returnTo: window.location.origin } })
-              }
+              onClick={() => logout({ logoutParams: { returnTo: window.location.origin } })}
               className="bg-white text-black cursor-pointer hover:bg-gray-200"
             >
               Log Out
@@ -109,7 +73,9 @@ const Home = () => {
           )}
         </div>
 
-        {isAuthenticated && <Button onClick={updateProfile}>Update</Button>}
+        {isAuthenticated && (
+          <Button onClick={updateProfile}>Update</Button>
+        )}
       </div>
     </div>
   );

@@ -2,7 +2,7 @@ import User from "../model/user.model.js";
 
 export const updateUser = async (req, res) => {
   try {
-    const userId = req.auth.sub;
+    const userId = req.auth.sub; // ✅ Auth0 user id comes from token
     const { fullname } = req.body;
 
     if (!fullname) {
@@ -29,33 +29,5 @@ export const updateUser = async (req, res) => {
       success: false,
       message: "Internal server error",
     });
-  }
-};
-
-export const saveUser = async (req, res) => {
-  try {
-    // Get user info from Auth0 token (already decoded by middleware)
-    const { sub, email, name, picture } = req.auth.payload;
-
-    if (!email) {
-      return res.status(400).json({ message: "No email found in token" });
-    }
-
-    // Check if user already exists
-    let user = await User.findOne({ email });
-
-    if (!user) {
-      user = await User.create({
-        auth0Id: sub,
-        email,
-        fullname: name,
-        photo: picture,
-      });
-    }
-
-    res.status(200).json({ success: true, user });
-  } catch (error) {
-    console.error("❌ saveUser error:", error);
-    res.status(500).json({ message: "Server error", error: error.message });
   }
 };
