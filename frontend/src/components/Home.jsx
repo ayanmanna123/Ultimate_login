@@ -5,24 +5,25 @@ import { useAuth0 } from "@auth0/auth0-react";
 import axios from "axios";
 
 const Home = () => {
-  const { logout, loginWithRedirect, isAuthenticated, user, getAccessTokenSilently } = useAuth0();
+  const {
+    logout,
+    loginWithRedirect,
+    isAuthenticated,
+    user,
+    getAccessTokenSilently,
+  } = useAuth0();
   const navigate = useNavigate();
 
- 
   useEffect(() => {
     const syncUser = async () => {
       try {
         const token = await getAccessTokenSilently({
-          audience: "http://localhost:5000/api/v1", // 👈 must match backend audience
+          audience: "http://localhost:5000/api/v1",
         });
 
         const res = await axios.post(
-          "https://ultimate-login.vercel.app/api/v1/user/save", // 👈 your backend route
-          {
-            fullname: user?.name,
-            email: user?.email,
-            profilephoto: user?.picture,
-          },
+          "https://ultimate-login.vercel.app/api/v1/user/save",
+          {}, // empty body, backend will pull info from token
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -91,7 +92,9 @@ const Home = () => {
         <div className="flex justify-center items-center gap-2.5 p-3.5">
           {isAuthenticated ? (
             <Button
-              onClick={() => logout({ logoutParams: { returnTo: window.location.origin } })}
+              onClick={() =>
+                logout({ logoutParams: { returnTo: window.location.origin } })
+              }
               className="bg-white text-black cursor-pointer hover:bg-gray-200"
             >
               Log Out
@@ -106,9 +109,7 @@ const Home = () => {
           )}
         </div>
 
-        {isAuthenticated && (
-          <Button onClick={updateProfile}>Update</Button>
-        )}
+        {isAuthenticated && <Button onClick={updateProfile}>Update</Button>}
       </div>
     </div>
   );
