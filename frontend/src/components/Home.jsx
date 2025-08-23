@@ -41,6 +41,7 @@ const Home = () => {
       const token = await getAccessTokenSilently({
         audience: "http://localhost:5000/api/v1",  
       });
+      console.log(token)
       const res = await axios.get(
         "https://ultimate-login.vercel.app/api/v1/user/get",
         
