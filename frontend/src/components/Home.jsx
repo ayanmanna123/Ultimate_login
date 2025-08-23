@@ -19,7 +19,7 @@ const Home = () => {
       const token = await getAccessTokenSilently({
         audience: "http://localhost:5000/api/v1",  
       });
-
+      console.log(token)
       const res = await axios.put(
         "https://ultimate-login.vercel.app/api/v1/user/update",
         { fullname: "New Full Name" },
