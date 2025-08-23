@@ -20,7 +20,7 @@ createRoot(document.getElementById("root")).render(
           clientId="2zeJqtiWNLa31OfIU9MZfQc4aMUfTY9y"
           authorizationParams={{
             redirect_uri: window.location.origin,
-            audience: "http://localhost:5000/api/v1", // 👈 use your API audience here
+            audience: "http://localhost:5000/api/v1",  
           }}
         >
           <App />

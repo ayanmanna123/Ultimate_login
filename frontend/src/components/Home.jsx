@@ -17,7 +17,7 @@ const Home = () => {
   const updateProfile = async () => {
     try {
       const token = await getAccessTokenSilently({
-        audience: "http://localhost:5000/api/v1", // 👈 matches backend audience
+        audience: "http://localhost:5000/api/v1",  
       });
 
       const res = await axios.put(
@@ -35,6 +35,26 @@ const Home = () => {
       console.error(error);
     }
   };
+
+  const getuser= async ()=>{
+    try {
+      const token = await getAccessTokenSilently({
+        audience: "http://localhost:5000/api/v1",  
+      });
+      const res = await axios.get(
+        "https://ultimate-login.vercel.app/api/v1/user/get",
+        
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log(res)
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   return (
     <div className="absolute inset-0 bg-black flex justify-center items-center gap-3.5">
@@ -74,7 +94,11 @@ const Home = () => {
         </div>
 
         {isAuthenticated && (
-          <Button onClick={updateProfile}>Update</Button>
+          <>
+           <Button onClick={updateProfile}>Update</Button>
+          <Button onClick={getuser}>get user details</Button>
+          </>
+         
         )}
       </div>
     </div>

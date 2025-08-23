@@ -31,3 +31,28 @@ export const updateUser = async (req, res) => {
     });
   }
 };
+
+export const getalluser = async (req, res) => {
+  try {
+    const userId = req.auth.sub;
+    if (!userId) {
+      return res.status(400).json({
+        message: "userid not found ",
+        success: false,
+      });
+    }
+    const alluser = await User.findOne({ auth0Id: userId });
+    if (!alluser) {
+      return res.status(400).json({
+        message: "userid not found ",
+        success: false,
+      });
+    }
+    return res.status(200).json({
+      message: "user get success fully",
+      success: true,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};

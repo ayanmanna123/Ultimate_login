@@ -21,7 +21,7 @@ app.use(cors(corsOptions));
 
 // ✅ Auth0 JWT Check
 const jwtCheck = auth({
-  audience: "http://localhost:5000/api/v1", // 👈 matches Auth0 API identifier
+  audience: "http://localhost:5000/api/v1",  
   issuerBaseURL: "https://dev-po1r5cykjnu8e0ld.us.auth0.com/",
   tokenSigningAlg: "RS256",
 });
