@@ -4,7 +4,7 @@ export const updateUser = async (req, res) => {
   try {
     const userId = req.auth.sub; // ✅ Auth0 user id comes from token
     const { fullname } = req.body;
-
+     
     if (!fullname) {
       return res.status(400).json({
         success: false,
@@ -50,6 +50,7 @@ export const getalluser = async (req, res) => {
     }
     return res.status(200).json({
       message: "user get success fully",
+      alluser,
       success: true,
     });
   } catch (error) {
